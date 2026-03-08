@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tibudý · continuous play</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b0f17 0%, #1a1f2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+        }
+
+        .glass-card {
+            background: rgba(18, 22, 36, 0.8);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(72, 90, 128, 0.25);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -8px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.06);
+            width: 100%;
+            max-width: 1000px;
+            padding: 2rem 2rem 2.2rem;
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-weight: 600;
+            font-size: 2.1rem;
+            letter-spacing: -0.02em;
+            color: #f0f3fa;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.2rem;
+        }
+
+        h1 span {
+            background: linear-gradient(130deg, #b37efc, #90caf9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .subhead {
+            font-size: 0.95rem;
+            color: #9aa9c7;
+            margin-bottom: 2.25rem;
+            border-left: 3px solid #3e5a9c;
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-section {
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: #0f1322;
+            border: 1px solid #2c3550;
+            border-radius: 3rem;
+            padding: 0.35rem 0.35rem 0.35rem 1.5rem;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: #7f6ef0;
+            box-shadow: 0 0 0 3px rgba(127, 110, 240, 0.25);
+        }
+
+        .search-icon {
+            color: #6e7ea6;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        #searchInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem 0.5rem 1rem 0;
+            font-size: 1.1rem;
+            color: #eef3ff;
+            outline: none;
+        }
+
+        #searchInput::placeholder {
+            color: #4b5679;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+        }
+
+        #searchBtn {
+            background: #2f4172;
+            border: none;
+            border-radius: 3rem;
+            padding: 0.85rem 2.2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #5f72a4;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        #searchBtn:hover {
+            background: #3e5692;
+            border-color: #8d9eec;
+            transform: scale(1.02);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0 0.8rem 0.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .result-header h2 {
+            color: #ccd9f5;
+            font-weight: 500;
+            font-size: 1.4rem;
+        }
+
+        .result-header p {
+            color: #8b9aca;
+            font-size: 0.9rem;
+            background: rgba(25, 34, 58, 0.7);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #2d3f64;
+        }
+
+        .play-all-container {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+        }
+
+        #playAllBtn {
+            background: #3d2b6e;
+            border: none;
+            border-radius: 3rem;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #9578d4;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        #playAllBtn:hover {
+            background: #553b99;
+            border-color: #bba6ff;
+            transform: scale(1.02);
+        }
+
+        #shuffleAllBtn {
+            background: #2d4f5c;
+            border: none;
+            border-radius: 3rem;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #6aa6c0;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        #shuffleAllBtn:hover {
+            background: #3f6f82;
+            border-color: #9cd0eb;
+        }
+
+        .music-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-height: 360px;
+            overflow-y: auto;
+            padding-right: 0.6rem;
+            margin-bottom: 2.2rem;
+            scrollbar-width: thin;
+            scrollbar-color: #5f72af #1b2340;
+        }
+
+        .music-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .music-grid::-webkit-scrollbar-track {
+            background: #1b2340;
+            border-radius: 12px;
+        }
+
+        .music-grid::-webkit-scrollbar-thumb {
+            background: #5f72af;
+            border-radius: 12px;
+            border: 1px solid #2e3d6b;
+        }
+
+        .track-card {
+            background: rgba(15, 21, 40, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #283353;
+            border-radius: 2rem;
+            padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: 0.15s;
+        }
+
+        .track-card:hover {
+            background: #1e2747;
+            border-color: #5a71b0;
+        }
+
+        .track-info {
+            flex: 2;
+        }
+
+        .track-name {
+            font-weight: 600;
+            color: #e3eaff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .track-name i {
+            font-size: 0.9rem;
+            color: #7989bd;
+            font-style: normal;
+            background: #0f1b30;
+            padding: 0.15rem 0.7rem;
+            border-radius: 50px;
+            border: 1px solid #3f5182;
+        }
+
+        .track-artist {
+            font-size: 0.9rem;
+            color: #95a5cf;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .track-artist span {
+            background: #262f4b;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #b4c6f0;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .play-btn, .download-btn {
+            background: transparent;
+            border: 1px solid #42547e;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #c7d6ff;
+            font-size: 1.4rem;
+        }
+
+        .play-btn:hover {
+            background: #4460b0;
+            border-color: #99b0ff;
+            color: white;
+            transform: scale(1.07);
+        }
+
+        .download-btn:hover {
+            background: #2b4f6c;
+            border-color: #7bb3e0;
+            color: white;
+            transform: scale(1.07);
+        }
+
+        .player-section {
+            background: #0f1629d1;
+            border-radius: 4rem;
+            padding: 1rem 2rem 1rem 2rem;
+            border: 1px solid #37477a;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .now-playing {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 2 1 240px;
+            color: #b7c7f0;
+            min-width: 180px;
+        }
+
+        .now-playing .marq {
+            font-weight: 500;
+            background: #1b2444;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid #38497a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 260px;
+        }
+
+        .audio-controls {
+            flex: 3;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        audio {
+            width: 100%;
+            min-width: 240px;
+            height: 48px;
+            border-radius: 40px;
+            background: #0f1a2f;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: #1b2647;
+            border-radius: 40px;
+        }
+
+        .tibudy-badge {
+            display: inline-block;
+            background: #1f2b4b;
+            border-radius: 40px;
+            padding: 0.1rem 1rem 0.1rem 1rem;
+            border: 1px solid #5b71b6;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #b6cdff;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-note {
+            margin-top: 1.2rem;
+            text-align: right;
+            color: #5a6d99;
+            font-size: 0.85rem;
+            border-top: 1px dashed #2d3b62;
+            padding-top: 1rem;
+        }
+
+        .footer-note a {
+            color: #b2c9ff;
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+
+        .queue-indicator {
+            background: #252f50;
+            border-radius: 30px;
+            padding: 0.2rem 1rem;
+            font-size: 0.8rem;
+            color: #baceff;
+            border: 1px solid #4b619b;
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="glass-card">
+        <h1>
+            <i class="fas fa-compact-disc" style="color: #a2b9f5;"></i> 
+            tibud<span>ý</span> <span style="font-size: 1rem; background: none; color: #758fcb; margin-left: 0;">· infinite play</span>
+        </h1>
+        <div class="subhead">
+            <i class="fas fa-music" style="margin-right: 8px;"></i> stream & download directly from tibudý library 
+            <span class="queue-indicator"><i class="fas fa-forward"></i> play all enabled</span>
+        </div>
+
+        <!-- search tab (index) -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search for a tibudý track... (e.g. 'lofi', 'waves', 'dream')" value="lofi">
+                <button id="searchBtn"><i class="fas fa-arrow-right" style="margin-right: 8px;"></i> search</button>
+            </div>
+            <!-- filter hint / tibudý tag + play all controls -->
+            <div style="display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;">
+                <span class="tibudy-badge"><i class="fas fa-database"></i> tibudý core</span>
+                <span style="color:#8193ca; font-size:0.9rem;">⚡ play all songs from current list</span>
+                <div class="play-all-container">
+                    <button id="playAllBtn"><i class="fas fa-play-circle"></i> play all</button>
+                    <button id="shuffleAllBtn"><i class="fas fa-random"></i> shuffle all</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- result header with dynamic count -->
+        <div class="result-header">
+            <h2><i class="fas fa-list-ul" style="margin-right: 10px;"></i>tibudý found</h2>
+            <p id="resultCount">0 tracks</p>
+        </div>
+
+        <!-- music list injected from tibudý -->
+        <div id="musicListContainer" class="music-grid">
+            <!-- dynamic cards appear here -->
+        </div>
+
+        <!-- unified player with download + play support + queue info -->
+        <div class="player-section">
+            <div class="now-playing">
+                <i class="fas fa-play-circle" style="color: #8ea5f5; font-size: 1.7rem;"></i>
+                <div class="marq" id="nowPlayingLabel">Select a track</div>
+            </div>
+            <div class="audio-controls">
+                <audio id="globalAudioPlayer" controls preload="metadata">
+                    <source src="" type="audio/mpeg">
+                    Your browser does not support audio.
+                </audio>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <i class="far fa-heart" style="color: #e0a2ff;"></i> from <strong>tibudý</strong> archive · <span id="queueStatus">ready to play all</span>
+            <a href="#" id="refreshHint" style="margin-left: 12px;"><i class="fas fa-sync-alt"></i> refresh</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- TIBUDY DATASET (full library) ----------
+            const tibudyCatalog = [
+                { 
+                    id: 'tbd1', 
+                    name: 'Midnight Waves', 
+                    artist: 'tibudý lofi', 
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_08_-_The_Summit.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_08_-_The_Summit.mp3'
+                },
+                {
+                    id: 'tbd2',
+                    name: 'Neon Rain',
+                    artist: 'tibudý 84',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kai_Engel/Satin/Kai_Engel_-_04_-_Satin_I.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kai_Engel/Satin/Kai_Engel_-_04_-_Satin_I.mp3'
+                },
+                {
+                    id: 'tbd3',
+                    name: 'Velvet Dream',
+                    artist: 'tibudý sky',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
+                },
+                {
+                    id: 'tbd4',
+                    name: 'City Lights',
+                    artist: 'tibudý (original)',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/dominic_gremli/dominic_gremli_-_01_-_Slow_Motion_-_Take_1.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/dominic_gremli/dominic_gremli_-_01_-_Slow_Motion_-_Take_1.mp3'
+                },
+                {
+                    id: 'tbd5',
+                    name: 'Ethereal Drift',
+                    artist: 'tibudý ambient',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Legend_of_Kai/Kai_Engel_-_02_-_Stone_Flower.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Legend_of_Kai/Kai_Engel_-_02_-_Stone_Flower.mp3'
+                },
+                {
+                    id: 'tbd6',
+                    name: 'Flowing Dust',
+                    artist: 'tibudý archives',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/William_Ask/Thatched/William_Ask_-_08_-_Wood_and_Nails.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/William_Ask/Thatched/William_Ask_-_08_-_Wood_and_Nails.mp3'
+                },
+                {
+                    id: 'tbd7',
+                    name: 'Tibudý Dusk',
+                    artist: 'Kyrean',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kyrean/Homewards/Kyrean_-_10_-_In_My_Dreams.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kyrean/Homewards/Kyrean_-_10_-_In_My_Dreams.mp3'
+                },
+                {
+                    id: 'tbd8',
+                    name: 'Purple Glow',
+                    artist: 'tibudý & sankt',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_09_-_Ethereality.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_09_-_Ethereality.mp3'
+                },
+                {
+                    id: 'tbd9',
+                    name: 'Crystal Cave',
+                    artist: 'tibudý system',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_03_-_Tale_of_Butterflies_Chapter_03.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_03_-_Tale_of_Butterflies_Chapter_03.mp3'
+                },
+                {
+                    id: 'tbd10',
+                    name: 'Arctic Bloom',
+                    artist: 'tibudý field',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Arps_Theme.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Arps_Theme.mp3'
+                }
+            ];
+
+            // ---------- references ----------
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const musicContainer = document.getElementById('musicListContainer');
+            const resultCountSpan = document.getElementById('resultCount');
+            const globalAudio = document.getElementById('globalAudioPlayer');
+            const nowPlayingSpan = document.getElementById('nowPlayingLabel');
+            const playAllBtn = document.getElementById('playAllBtn');
+            const shuffleAllBtn = document.getElementById('shuffleAllBtn');
+            const queueStatus = document.getElementById('queueStatus');
+
+            // state for queue
+            let currentQueue = [];           // array of track objects (filtered list)
+            let queueIndex = -1;
+
+            // helper: update queue status display
+            function updateQueueStatus() {
+                if (currentQueue.length === 0) {
+                    queueStatus.innerText = '🎵 no tracks in queue';
+                } else if (queueIndex >= 0 && queueIndex < currentQueue.length) {
+                    queueStatus.innerText = `📀 queue ${queueIndex+1}/${currentQueue.length} · ${currentQueue[queueIndex].name}`;
+                } else {
+                    queueStatus.innerText = `🎶 ${currentQueue.length} tracks ready`;
+                }
+            }
+
+            // play a track by index in currentQueue
+            function playQueueItem(index) {
+                if (!currentQueue.length || index < 0 || index >= currentQueue.length) {
+                    console.warn('queue index out of range');
+                    return;
+                }
+                const track = currentQueue[index];
+                globalAudio.src = track.source;
+                globalAudio.play().catch(e => console.log('play prevented:', e));
+                nowPlayingSpan.innerText = `♫ ${track.name} · ${track.artist}`;
+                queueIndex = index;
+                updateQueueStatus();
+            }
+
+            // setup ended event to auto-play next in queue
+            globalAudio.addEventListener('ended', () => {
+                if (currentQueue.length > 0 && queueIndex >= 0) {
+                    const nextIndex = queueIndex + 1;
+                    if (nextIndex < currentQueue.length) {
+                        playQueueItem(nextIndex);
+                    } else {
+                        // reached end
+                        queueIndex = -1;
+                        nowPlayingSpan.innerText = '■ end of queue · play all again?';
+                        updateQueueStatus();
+                    }
+                } else {
+                    queueStatus.innerText = 'playback finished';
+                }
+            });
+
+            // render tracks based on query, update queue automatically
+            function renderTracks(query = '') {
+                const lowerQuery = query.trim().toLowerCase();
+                let filtered = tibudyCatalog;
+
+                if (lowerQuery !== '') {
+                    filtered = tibudyCatalog.filter(track => 
+                        track.name.toLowerCase().includes(lowerQuery) || 
+                        track.artist.toLowerCase().includes(lowerQuery) ||
+                        (track.name + track.artist).toLowerCase().includes(lowerQuery)
+                    );
+                }
+
+                // update currentQueue to the filtered list (this is the "all songs" from tibudy based on search)
+                currentQueue = filtered.slice();  // copy
+                queueIndex = -1;  // not playing any queue track initially
+
+                resultCountSpan.innerText = filtered.length + (filtered.length === 1 ? ' track' : ' tracks');
+                updateQueueStatus();
+
+                if (filtered.length === 0) {
+                    musicContainer.innerHTML = `<div style="color:#8899cc; text-align:center; padding:2rem; border:1px dashed #2f3f6a; border-radius: 3rem;">
+                        <i class="fas fa-sad-tear" style="font-size:2rem;"></i><br>no tibudý tracks matched · try "waves" or "dream"
+                    </div>`;
+                    return;
+                }
+
+                let htmlStr = '';
+                filtered.forEach(track => {
+                    htmlStr += `
+                        <div class="track-card" data-track-id="${track.id}">
+                            <div class="track-info">
+                                <div class="track-name">
+                                    ${track.name}
+                                    <i>tibudý</i>
+                                </div>
+                                <div class="track-artist">
+                                    <i class="fas fa-user-astronaut"></i> ${track.artist}
+                                    <span>exclusive</span>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="play-btn" data-play-url="${track.source}" data-track-name="${track.name} - ${track.artist}" data-track-id="${track.id}" title="play on tibudý"><i class="fas fa-play"></i></button>
+                                <button class="download-btn" data-download-url="${track.downloadUrl}" data-track-name="${track.name}" title="download from tibudý"><i class="fas fa-download"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                musicContainer.innerHTML = htmlStr;
+
+                // attach play button events – now also sets the queue index to clicked item and starts playing from there (optional)
+                document.querySelectorAll('.play-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const url = btn.dataset.playUrl;
+                        const trackName = btn.dataset.trackName || 'tibudý track';
+                        const trackId = btn.dataset.trackId;
+                        // find track in currentQueue and set index
+                        const trackObj = currentQueue.find(t => t.id === trackId);
+                        if (trackObj) {
+                            const idx = currentQueue.indexOf(trackObj);
+                            if (idx !== -1) {
+                                playQueueItem(idx);
+                            } else {
+                                // fallback
+                                globalAudio.src = url;
+                                globalAudio.play();
+                                nowPlayingSpan.innerText = '♫ ' + trackName;
+                            }
+                        } else {
+                            globalAudio.src = url;
+                            globalAudio.play();
+                            nowPlayingSpan.innerText = '♫ ' + trackName;
+                        }
+                    });
+                });
+
+                // download buttons
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const downloadUrl = btn.dataset.downloadUrl;
+                        const trackName = btn.dataset.trackName || 'tibudy_track';
+                        if (downloadUrl) {
+                            const link = document.createElement('a');
+                            link.href = downloadUrl;
+                            link.download = trackName.replace(/[^a-z0-9]/gi, '_') + '.mp3';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            nowPlayingSpan.innerText = `⬇️ downloading ${trackName}...`;
+                        }
+                    });
+                });
+            }
+
+            // play all (sequential from start)
+            function playAllSongs() {
+                if (currentQueue.length === 0) {
+                    queueStatus.innerText = '⚠️ no tracks to play';
+                    return;
+                }
+                // start from first track
+                playQueueItem(0);
+            }
+
+            // shuffle all: randomize queue and play first
+            function shuffleAndPlay() {
+                if (currentQueue.length === 0) {
+                    queueStatus.innerText = '⚠️ no tracks to shuffle';
+                    return;
+                }
+                // Fisher-Yates shuffle on currentQueue (copy but we mutate)
+                for (let i = currentQueue.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [currentQueue[i], currentQueue[j]] = [currentQueue[j], currentQueue[i]];
+                }
+                // render the same order visually? We want UI to reflect shuffle? Could re-render but keep filtered order consistent.
+                // but we keep queue order for playback, but we don't re-render the list to avoid confusion. 
+                // optionally we could re-render list in shuffled order? But better keep list as search order, queue independent.
+                // So we update queue and play.
+                queueIndex = -1; // reset
+                playQueueItem(0);
+                // update status to indicate shuffle
+                queueStatus.innerText = `🔀 shuffled ${currentQueue.length} tracks`;
+                // Optionally highlight that order changed
+            }
+
+            // initial render (default search term 'lofi')
+            renderTracks(searchInput.value);
+
+            // search button click
+            searchBtn.addEventListener('click', () => {
+                renderTracks(searchInput.value);
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    renderTracks(searchInput.value);
+                }
+            });
+
+            // play all button
+            playAllBtn.addEventListener('click', () => {
+                playAllSongs();
+            });
+
+            // shuffle all button
+            shuffleAllBtn.addEventListener('click', () => {
+                shuffleAndPlay();
+            });
+
+            // refresh hint
+            document.getElementById('refreshHint').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderTracks(searchInput.value);
+            });
+
+        })();
+    </script>
+</body>
+</html>
