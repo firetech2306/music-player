@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tibudý · continuous play</title>
+    <title>tibudy · search & play</title>
     <style>
         * {
             margin: 0;
@@ -58,20 +58,17 @@
         .subhead {
             font-size: 0.95rem;
             color: #9aa9c7;
-            margin-bottom: 2.25rem;
+            margin-bottom: 2rem;
             border-left: 3px solid #3e5a9c;
             padding-left: 1rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             flex-wrap: wrap;
         }
 
         .search-section {
-            margin-bottom: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
+            margin-bottom: 2.2rem;
         }
 
         .search-wrapper {
@@ -136,15 +133,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 1rem 0 0.8rem 0.2rem;
-            flex-wrap: wrap;
-            gap: 0.8rem;
+            margin: 1.5rem 0 1rem 0.2rem;
         }
 
         .result-header h2 {
             color: #ccd9f5;
             font-weight: 500;
             font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .result-header p {
@@ -156,59 +154,6 @@
             border: 1px solid #2d3f64;
         }
 
-        .play-all-container {
-            display: flex;
-            gap: 0.7rem;
-            align-items: center;
-        }
-
-        #playAllBtn {
-            background: #3d2b6e;
-            border: none;
-            border-radius: 3rem;
-            padding: 0.6rem 1.8rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: white;
-            cursor: pointer;
-            transition: 0.15s;
-            border: 1px solid #9578d4;
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        #playAllBtn:hover {
-            background: #553b99;
-            border-color: #bba6ff;
-            transform: scale(1.02);
-        }
-
-        #shuffleAllBtn {
-            background: #2d4f5c;
-            border: none;
-            border-radius: 3rem;
-            padding: 0.6rem 1.8rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: white;
-            cursor: pointer;
-            transition: 0.15s;
-            border: 1px solid #6aa6c0;
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        #shuffleAllBtn:hover {
-            background: #3f6f82;
-            border-color: #9cd0eb;
-        }
-
         .music-grid {
             display: flex;
             flex-direction: column;
@@ -216,7 +161,7 @@
             max-height: 360px;
             overflow-y: auto;
             padding-right: 0.6rem;
-            margin-bottom: 2.2rem;
+            margin-bottom: 2rem;
             scrollbar-width: thin;
             scrollbar-color: #5f72af #1b2340;
         }
@@ -268,13 +213,13 @@
         }
 
         .track-name i {
-            font-size: 0.9rem;
-            color: #7989bd;
+            font-size: 0.85rem;
+            color: #95a9e0;
             font-style: normal;
-            background: #0f1b30;
-            padding: 0.15rem 0.7rem;
+            background: #1f2b4a;
+            padding: 0.15rem 0.8rem;
             border-radius: 50px;
-            border: 1px solid #3f5182;
+            border: 1px solid #4f69b0;
         }
 
         .track-artist {
@@ -339,7 +284,7 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 1.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .now-playing {
@@ -387,9 +332,9 @@
             display: inline-block;
             background: #1f2b4b;
             border-radius: 40px;
-            padding: 0.1rem 1rem 0.1rem 1rem;
+            padding: 0.2rem 1.2rem;
             border: 1px solid #5b71b6;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #b6cdff;
             letter-spacing: 0.5px;
@@ -410,289 +355,235 @@
             border-bottom: 1px dotted;
         }
 
-        .queue-indicator {
-            background: #252f50;
-            border-radius: 30px;
-            padding: 0.2rem 1rem;
-            font-size: 0.8rem;
-            color: #baceff;
-            border: 1px solid #4b619b;
+        .tibudy-tag {
+            color: #aac3ff;
         }
     </style>
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="glass-card">
         <h1>
-            <i class="fas fa-compact-disc" style="color: #a2b9f5;"></i> 
-            tibud<span>ý</span> <span style="font-size: 1rem; background: none; color: #758fcb; margin-left: 0;">· infinite play</span>
+            <i class="fas fa-headphones" style="color: #a2b9f5;"></i> 
+            tibud<span>ý</span> <span style="font-size: 1rem; background: none; color: #758fcb;">finder</span>
         </h1>
         <div class="subhead">
-            <i class="fas fa-music" style="margin-right: 8px;"></i> stream & download directly from tibudý library 
-            <span class="queue-indicator"><i class="fas fa-forward"></i> play all enabled</span>
+            <i class="fas fa-magnifying-glass" style="margin-right: 8px;"></i> 
+            search for any song · results come directly from tibudy library
+            <span class="tibudy-badge"><i class="fas fa-database"></i> tibudy core</span>
         </div>
 
-        <!-- search tab (index) -->
+        <!-- search tab (always visible) -->
         <div class="search-section">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchInput" placeholder="Search for a tibudý track... (e.g. 'lofi', 'waves', 'dream')" value="lofi">
-                <button id="searchBtn"><i class="fas fa-arrow-right" style="margin-right: 8px;"></i> search</button>
+                <input type="text" id="searchInput" placeholder="Search tibudy for artist, track, vibe ..." value="waves">
+                <button id="searchBtn"><i class="fas fa-arrow-right"></i> find on tibudy</button>
             </div>
-            <!-- filter hint / tibudý tag + play all controls -->
-            <div style="display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap;">
-                <span class="tibudy-badge"><i class="fas fa-database"></i> tibudý core</span>
-                <span style="color:#8193ca; font-size:0.9rem;">⚡ play all songs from current list</span>
-                <div class="play-all-container">
-                    <button id="playAllBtn"><i class="fas fa-play-circle"></i> play all</button>
-                    <button id="shuffleAllBtn"><i class="fas fa-random"></i> shuffle all</button>
-                </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+                <span style="color:#6f7fb0; font-size:0.85rem;"><i class="far fa-keyboard"></i> try "lofi", "night", "dream", "sun"</span>
             </div>
         </div>
 
         <!-- result header with dynamic count -->
         <div class="result-header">
-            <h2><i class="fas fa-list-ul" style="margin-right: 10px;"></i>tibudý found</h2>
+            <h2>
+                <i class="fas fa-list-ul" style="margin-right: 8px;"></i>
+                tibudy results
+            </h2>
             <p id="resultCount">0 tracks</p>
         </div>
 
-        <!-- music list injected from tibudý -->
+        <!-- music list injected from tibudy search -->
         <div id="musicListContainer" class="music-grid">
             <!-- dynamic cards appear here -->
         </div>
 
-        <!-- unified player with download + play support + queue info -->
+        <!-- unified player -->
         <div class="player-section">
             <div class="now-playing">
                 <i class="fas fa-play-circle" style="color: #8ea5f5; font-size: 1.7rem;"></i>
-                <div class="marq" id="nowPlayingLabel">Select a track</div>
+                <div class="marq" id="nowPlayingLabel">⏯ pick a track</div>
             </div>
             <div class="audio-controls">
                 <audio id="globalAudioPlayer" controls preload="metadata">
                     <source src="" type="audio/mpeg">
-                    Your browser does not support audio.
                 </audio>
             </div>
         </div>
 
         <div class="footer-note">
-            <i class="far fa-heart" style="color: #e0a2ff;"></i> from <strong>tibudý</strong> archive · <span id="queueStatus">ready to play all</span>
-            <a href="#" id="refreshHint" style="margin-left: 12px;"><i class="fas fa-sync-alt"></i> refresh</a>
+            <i class="fas fa-search tibudy-tag"></i> every search queries <strong>tibudy</strong> database · play & download directly 
+            <a href="#" id="refreshHint" style="margin-left: 12px;"><i class="fas fa-sync-alt"></i> refresh list</a>
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- TIBUDY DATASET (full library) ----------
+            // ---------- TIBUDY MASTER CATALOG (simulated but every track is "from tibudy") ----------
             const tibudyCatalog = [
                 { 
-                    id: 'tbd1', 
+                    id: 'tbd001', 
                     name: 'Midnight Waves', 
-                    artist: 'tibudý lofi', 
+                    artist: 'tibudy lofi', 
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_08_-_The_Summit.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_08_-_The_Summit.mp3'
                 },
                 {
-                    id: 'tbd2',
+                    id: 'tbd002',
                     name: 'Neon Rain',
-                    artist: 'tibudý 84',
+                    artist: 'tibudy 84',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kai_Engel/Satin/Kai_Engel_-_04_-_Satin_I.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kai_Engel/Satin/Kai_Engel_-_04_-_Satin_I.mp3'
                 },
                 {
-                    id: 'tbd3',
+                    id: 'tbd003',
                     name: 'Velvet Dream',
-                    artist: 'tibudý sky',
+                    artist: 'tibudy sky',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3'
                 },
                 {
-                    id: 'tbd4',
+                    id: 'tbd004',
                     name: 'City Lights',
-                    artist: 'tibudý (original)',
+                    artist: 'tibudy original',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/dominic_gremli/dominic_gremli_-_01_-_Slow_Motion_-_Take_1.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/dominic_gremli/dominic_gremli_-_01_-_Slow_Motion_-_Take_1.mp3'
                 },
                 {
-                    id: 'tbd5',
+                    id: 'tbd005',
                     name: 'Ethereal Drift',
-                    artist: 'tibudý ambient',
+                    artist: 'tibudy ambient',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Legend_of_Kai/Kai_Engel_-_02_-_Stone_Flower.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Legend_of_Kai/Kai_Engel_-_02_-_Stone_Flower.mp3'
                 },
                 {
-                    id: 'tbd6',
+                    id: 'tbd006',
                     name: 'Flowing Dust',
-                    artist: 'tibudý archives',
+                    artist: 'tibudy archives',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/William_Ask/Thatched/William_Ask_-_08_-_Wood_and_Nails.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/William_Ask/Thatched/William_Ask_-_08_-_Wood_and_Nails.mp3'
                 },
                 {
-                    id: 'tbd7',
-                    name: 'Tibudý Dusk',
-                    artist: 'Kyrean',
+                    id: 'tbd007',
+                    name: 'Tibudy Dusk',
+                    artist: 'Kyrean / tibudy',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kyrean/Homewards/Kyrean_-_10_-_In_My_Dreams.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Kyrean/Homewards/Kyrean_-_10_-_In_My_Dreams.mp3'
                 },
                 {
-                    id: 'tbd8',
+                    id: 'tbd008',
                     name: 'Purple Glow',
-                    artist: 'tibudý & sankt',
+                    artist: 'tibudy & sankt',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_09_-_Ethereality.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Scott_Holmes/Music_for_Media/Scott_Holmes_-_09_-_Ethereality.mp3'
                 },
                 {
-                    id: 'tbd9',
+                    id: 'tbd009',
                     name: 'Crystal Cave',
-                    artist: 'tibudý system',
+                    artist: 'tibudy system',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_03_-_Tale_of_Butterflies_Chapter_03.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_03_-_Tale_of_Butterflies_Chapter_03.mp3'
                 },
                 {
-                    id: 'tbd10',
+                    id: 'tbd010',
                     name: 'Arctic Bloom',
-                    artist: 'tibudý field',
+                    artist: 'tibudy field',
                     source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Arps_Theme.mp3',
                     downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Arps_Theme.mp3'
+                },
+                {
+                    id: 'tbd011',
+                    name: 'Nightdrive',
+                    artist: 'tibudy synth',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Chapter_Three__Fate/Kai_Engel_-_05_-_Floating_Point.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Chapter_Three__Fate/Kai_Engel_-_05_-_Floating_Point.mp3'
+                },
+                {
+                    id: 'tbd012',
+                    name: 'Mellow Stream',
+                    artist: 'tibudy waters',
+                    source: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_05_-_Tale_of_Butterflies_Chapter_05.mp3',
+                    downloadUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Creative_Commons/Komiku/Tale_of_Butterflies/Komiku_-_05_-_Tale_of_Butterflies_Chapter_05.mp3'
                 }
             ];
 
-            // ---------- references ----------
+            // DOM elements
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchBtn');
             const musicContainer = document.getElementById('musicListContainer');
             const resultCountSpan = document.getElementById('resultCount');
             const globalAudio = document.getElementById('globalAudioPlayer');
             const nowPlayingSpan = document.getElementById('nowPlayingLabel');
-            const playAllBtn = document.getElementById('playAllBtn');
-            const shuffleAllBtn = document.getElementById('shuffleAllBtn');
-            const queueStatus = document.getElementById('queueStatus');
+            const refreshHint = document.getElementById('refreshHint');
 
-            // state for queue
-            let currentQueue = [];           // array of track objects (filtered list)
-            let queueIndex = -1;
-
-            // helper: update queue status display
-            function updateQueueStatus() {
-                if (currentQueue.length === 0) {
-                    queueStatus.innerText = '🎵 no tracks in queue';
-                } else if (queueIndex >= 0 && queueIndex < currentQueue.length) {
-                    queueStatus.innerText = `📀 queue ${queueIndex+1}/${currentQueue.length} · ${currentQueue[queueIndex].name}`;
-                } else {
-                    queueStatus.innerText = `🎶 ${currentQueue.length} tracks ready`;
-                }
-            }
-
-            // play a track by index in currentQueue
-            function playQueueItem(index) {
-                if (!currentQueue.length || index < 0 || index >= currentQueue.length) {
-                    console.warn('queue index out of range');
-                    return;
-                }
-                const track = currentQueue[index];
-                globalAudio.src = track.source;
-                globalAudio.play().catch(e => console.log('play prevented:', e));
-                nowPlayingSpan.innerText = `♫ ${track.name} · ${track.artist}`;
-                queueIndex = index;
-                updateQueueStatus();
-            }
-
-            // setup ended event to auto-play next in queue
-            globalAudio.addEventListener('ended', () => {
-                if (currentQueue.length > 0 && queueIndex >= 0) {
-                    const nextIndex = queueIndex + 1;
-                    if (nextIndex < currentQueue.length) {
-                        playQueueItem(nextIndex);
-                    } else {
-                        // reached end
-                        queueIndex = -1;
-                        nowPlayingSpan.innerText = '■ end of queue · play all again?';
-                        updateQueueStatus();
-                    }
-                } else {
-                    queueStatus.innerText = 'playback finished';
-                }
-            });
-
-            // render tracks based on query, update queue automatically
-            function renderTracks(query = '') {
+            // search function: filters tibudyCatalog based on input
+            function searchTibudy(query) {
                 const lowerQuery = query.trim().toLowerCase();
-                let filtered = tibudyCatalog;
-
-                if (lowerQuery !== '') {
-                    filtered = tibudyCatalog.filter(track => 
-                        track.name.toLowerCase().includes(lowerQuery) || 
-                        track.artist.toLowerCase().includes(lowerQuery) ||
-                        (track.name + track.artist).toLowerCase().includes(lowerQuery)
-                    );
+                if (lowerQuery === '') {
+                    // if empty search, return full catalog? we decide: show all tibudy songs
+                    return tibudyCatalog.slice();
                 }
+                return tibudyCatalog.filter(track => 
+                    track.name.toLowerCase().includes(lowerQuery) || 
+                    track.artist.toLowerCase().includes(lowerQuery) ||
+                    (track.name + ' ' + track.artist).toLowerCase().includes(lowerQuery)
+                );
+            }
 
-                // update currentQueue to the filtered list (this is the "all songs" from tibudy based on search)
-                currentQueue = filtered.slice();  // copy
-                queueIndex = -1;  // not playing any queue track initially
+            // render results from tibudy based on search query
+            function renderResults(query) {
+                const results = searchTibudy(query);
+                
+                // update result count
+                resultCountSpan.innerText = results.length + (results.length === 1 ? ' song' : ' songs');
 
-                resultCountSpan.innerText = filtered.length + (filtered.length === 1 ? ' track' : ' tracks');
-                updateQueueStatus();
-
-                if (filtered.length === 0) {
+                if (results.length === 0) {
                     musicContainer.innerHTML = `<div style="color:#8899cc; text-align:center; padding:2rem; border:1px dashed #2f3f6a; border-radius: 3rem;">
-                        <i class="fas fa-sad-tear" style="font-size:2rem;"></i><br>no tibudý tracks matched · try "waves" or "dream"
+                        <i class="fas fa-binoculars" style="font-size:2rem;"></i><br> No tracks found on tibudy for "${query}" · try different keywords
                     </div>`;
                     return;
                 }
 
                 let htmlStr = '';
-                filtered.forEach(track => {
+                results.forEach(track => {
                     htmlStr += `
                         <div class="track-card" data-track-id="${track.id}">
                             <div class="track-info">
                                 <div class="track-name">
                                     ${track.name}
-                                    <i>tibudý</i>
+                                    <i>tibudy</i>
                                 </div>
                                 <div class="track-artist">
-                                    <i class="fas fa-user-astronaut"></i> ${track.artist}
-                                    <span>exclusive</span>
+                                    <i class="fas fa-microphone-alt"></i> ${track.artist}
+                                    <span>premium</span>
                                 </div>
                             </div>
                             <div class="action-buttons">
-                                <button class="play-btn" data-play-url="${track.source}" data-track-name="${track.name} - ${track.artist}" data-track-id="${track.id}" title="play on tibudý"><i class="fas fa-play"></i></button>
-                                <button class="download-btn" data-download-url="${track.downloadUrl}" data-track-name="${track.name}" title="download from tibudý"><i class="fas fa-download"></i></button>
+                                <button class="play-btn" data-play-url="${track.source}" data-track-name="${track.name} - ${track.artist}" data-track-id="${track.id}" title="play on tibudy"><i class="fas fa-play"></i></button>
+                                <button class="download-btn" data-download-url="${track.downloadUrl}" data-track-name="${track.name}" title="download from tibudy"><i class="fas fa-download"></i></button>
                             </div>
                         </div>
                     `;
                 });
                 musicContainer.innerHTML = htmlStr;
 
-                // attach play button events – now also sets the queue index to clicked item and starts playing from there (optional)
+                // attach play button events
                 document.querySelectorAll('.play-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const url = btn.dataset.playUrl;
-                        const trackName = btn.dataset.trackName || 'tibudý track';
-                        const trackId = btn.dataset.trackId;
-                        // find track in currentQueue and set index
-                        const trackObj = currentQueue.find(t => t.id === trackId);
-                        if (trackObj) {
-                            const idx = currentQueue.indexOf(trackObj);
-                            if (idx !== -1) {
-                                playQueueItem(idx);
-                            } else {
-                                // fallback
-                                globalAudio.src = url;
-                                globalAudio.play();
-                                nowPlayingSpan.innerText = '♫ ' + trackName;
-                            }
-                        } else {
+                        const trackName = btn.dataset.trackName || 'tibudy track';
+                        if (url) {
                             globalAudio.src = url;
-                            globalAudio.play();
+                            globalAudio.play().catch(err => console.log('playback:', err));
                             nowPlayingSpan.innerText = '♫ ' + trackName;
                         }
                     });
                 });
 
-                // download buttons
+                // attach download button events
                 document.querySelectorAll('.download-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -711,68 +602,31 @@
                 });
             }
 
-            // play all (sequential from start)
-            function playAllSongs() {
-                if (currentQueue.length === 0) {
-                    queueStatus.innerText = '⚠️ no tracks to play';
-                    return;
-                }
-                // start from first track
-                playQueueItem(0);
-            }
-
-            // shuffle all: randomize queue and play first
-            function shuffleAndPlay() {
-                if (currentQueue.length === 0) {
-                    queueStatus.innerText = '⚠️ no tracks to shuffle';
-                    return;
-                }
-                // Fisher-Yates shuffle on currentQueue (copy but we mutate)
-                for (let i = currentQueue.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [currentQueue[i], currentQueue[j]] = [currentQueue[j], currentQueue[i]];
-                }
-                // render the same order visually? We want UI to reflect shuffle? Could re-render but keep filtered order consistent.
-                // but we keep queue order for playback, but we don't re-render the list to avoid confusion. 
-                // optionally we could re-render list in shuffled order? But better keep list as search order, queue independent.
-                // So we update queue and play.
-                queueIndex = -1; // reset
-                playQueueItem(0);
-                // update status to indicate shuffle
-                queueStatus.innerText = `🔀 shuffled ${currentQueue.length} tracks`;
-                // Optionally highlight that order changed
-            }
-
-            // initial render (default search term 'lofi')
-            renderTracks(searchInput.value);
+            // initial load: search for default value "waves"
+            renderResults(searchInput.value);
 
             // search button click
             searchBtn.addEventListener('click', () => {
-                renderTracks(searchInput.value);
+                renderResults(searchInput.value);
             });
 
+            // press Enter in search field
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    renderTracks(searchInput.value);
+                    renderResults(searchInput.value);
                 }
             });
 
-            // play all button
-            playAllBtn.addEventListener('click', () => {
-                playAllSongs();
-            });
-
-            // shuffle all button
-            shuffleAllBtn.addEventListener('click', () => {
-                shuffleAndPlay();
-            });
-
-            // refresh hint
-            document.getElementById('refreshHint').addEventListener('click', (e) => {
+            // refresh hint: re-run current search
+            refreshHint.addEventListener('click', (e) => {
                 e.preventDefault();
-                renderTracks(searchInput.value);
+                renderResults(searchInput.value);
             });
 
+            // audio ended -> reset label
+            globalAudio.addEventListener('ended', () => {
+                nowPlayingSpan.innerText = '■ finished · search again';
+            });
         })();
     </script>
 </body>
